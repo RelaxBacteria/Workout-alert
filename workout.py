@@ -50,7 +50,7 @@ print(load_workout)
 
 # Calculate Resting time
 def calculateRest():
-    return 2
+    return 2000
 
 # Randomly generates number that points to a workout ID
 def pickWorkout():
@@ -59,9 +59,14 @@ def pickWorkout():
 def calculateReps(row):
     row[8] += 1
     row[7] += 1
-    print(math.log(((10-row[5])/row[7])))
-    row[6] += math.log(((10-row[5])/row[7])+1)
-    return row
+    print(row[5], row[7])
+    repincrease = math.log(((10-row[5])/row[7]))/2.2
+    print(row[1] + " += " + str(repincrease))
+    if repincrease <= 0:
+        return row
+    else:
+        row[6] += repincrease
+        return row
 
 # Show Alert
 while True:
