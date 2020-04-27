@@ -4,6 +4,9 @@ import sqlite3
 import random
 import math
 import os
+import sys
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import QTimer, QTime
 
 PARTS = ['Upper', 'Lower', 'Torso', 'Core']
 TYPE = ['Reps', 'Secs']
@@ -50,7 +53,7 @@ print(load_workout)
 
 # Calculate Resting time
 def calculateRest():
-    return 2000
+    return 1000
 
 # Randomly generates number that points to a workout ID
 def pickWorkout():
@@ -69,23 +72,52 @@ def calculateReps(row):
         return row
 
 # Show Alert
-while True:
+def ShowAlert():
     # Randomly pick a workout
     workout_index = random.randrange(0, len(retrieveData()))
 
     # Show an alert
     #ctypes.windll.user32.MessageBoxW(0, math.floor(str(load_workout[workout_index][6])), str(load_workout[workout_index][1]), 1)
-    ctypes.windll.user32.MessageBoxW(0, str(load_workout[workout_index][6]) + ", alert: " +str(load_workout[workout_index][7]), str(load_workout[workout_index][1]), 1)
+    ctypes.windll.user32.MessageBoxW(0, str(math.floor(load_workout[workout_index][6])), str(load_workout[workout_index][1]), 1)
 
     # Update Reps
     load_workout[workout_index] = calculateReps(load_workout[workout_index])
 
     # Apply to the database
-    cursor.execute("UPDATE workoutdata SET curReps=?, totalAlerts=? WHERE ID=?", (load_workout[workout_index][6], load_workout[workout_index][8], load_workout[workout_index][0]))
+    # cursor.execute("UPDATE workoutdata SET curReps=?, totalAlerts=? WHERE ID=?", (load_workout[workout_index][6], load_workout[workout_index][8], load_workout[workout_index][0]))
 
-    # Give the time to rest
-    time.sleep(calculateRest())
+# Tray Icon Implement
+class SystemTrayIcon(QtWidgets.QSystemTrayIcon):
 
+    def __init__(self, icon, parent=None):
+        QtWidgets.QSystemTrayIcon.__init__(self, icon, parent)
+        menu = QtWidgets.QMenu(parent)
+        exitAction = menu.addAction("Exit")
+        
+        self.timer = QTimer(self)
+        self.timer.setInterval(1000)
+        self.timer.start()
+        self.timer.timeout.connect(self.timeout)
+        self.setContextMenu(menu)
+        menu.triggered.connect(self.exit)
 
+    def exit(self):
+        QtCore.QCoreApplication.exit()
 
+    def timeout(self):
+        sender = self.sender()
+        currentTime = QTime.currentTime().toString("hh:mm:ss")
+ 
+        if id(sender) == id(self.timer):
+            ShowAlert()
 
+def main(image):
+    app = QtWidgets.QApplication(sys.argv)
+    w = QtWidgets.QWidget()
+    trayIcon = SystemTrayIcon(QtGui.QIcon(image), w)
+    trayIcon.show()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    on='icon.ico'
+    main(on)
