@@ -1,22 +1,40 @@
-Workout notifier is a simple python script that reminds you to get up your ass and work out a bit.
+<h1>궁극의 운동 알리미가 등장! 베타 버전!</h1>
+<hr>
 
-It consists of a single python script that runs infinitely. On the first execution, it will create a .db database with three basic workout moves.
+<p>운동 알리미(Workout Alert)는 파이썬으로 제작한 스크립트로, 특정 시간 주기마다 무작위로 운동 종목을 골라 기록된 횟수와 함께 윈도우 알림창으로 보여줍니다.</p>
 
-You can edit the 'workoutdata' table in the database to add your workout moves, just remember this format:
+<p>레포지토리의 workout.py 파일이 전부이며, 같은 폴더에 icon.ico파일이 존재해야 구동됩니다. 이는 빌드된 workout.exe도 마찬가지입니다.</p>
 
-ID: Primary key, don't touch this.
-name: The name of your workout. TEXT.
-part, type: These do nothing as of current.
-minreps: Minimum reps or seconds.
-difficulty: The difficulty of the move. input integer value between 1 to 10. It affects reps/secs increase: higher the number, lower the increase.
-curReps: Input the same value as minreps. Or any reps you want to do.
-overHeat: Leave it as 0.
-totalAlerts: This records how many times you've done the move.
+<h2>사용법</h2>
+<hr>
 
-There's no GUI, so the recommanded execution method of this script is to create a .bat file on Windows in the following format:
-python SCRIPT PATH
+<p>workout.py 혹은 workout.exe를 icon.ico파일과 같은 디렉토리에 다운로드하여, 실행합니다.<br />
+초회 실행 시 workoutdata.db라는 데이터베이스가 생성됩니다. 대략 30분(2000초) 주기로 데이터베이스 내의 운동 종목을 무작위로 골라 
+횟수와 함께 윈도우 알림창으로 띄워줍니다.</p>
 
-The code is very simple and comes with comments, you'll be able to understand it easily.
+<p>실행 중에는 시스템 트레이 아이콘이 생기며, GUI를 대신합니다. 우클릭 메뉴는 다음과 같습니다.</p>
 
-Thank you for reading.
+<ul>
+  <li>Exit: 운동 알리미를 종료합니다.</li>
+  <li>View Workout List: 데이터베이스 내의 운동 목록을 파이썬 리스트 형태로 보여줍니다.</li>
+  <li>Show Time Left: 다음 알림까지 남은 시간을 초 단위로 보여줍니다.</li>
+</ul>
+
+<h2>운동 데이터베이스 수정</h2>
+<hr>
+
+<p>운동 데이터베이스 파일인 workoutdata.db는 sqlite3 로 생성, 수정되므로, <a href="https://sqlitebrowser.org/">DB Browser for
+SQLite</a>등의 소프트웨어로 조작 가능합니다.</p>
+
+<p>데이터베이스의 workout 테이블을 수정하면 됩니다. 각각의 열에 대한 설명입니다.</p>
+<ul>
+  <li>ID: 프라이머리 키. 자동 등록되므로 건들지 않는 것을 추천.</li>
+  <li>name: 운동의 이름. 알림창의 제목에 표시됨.</li>
+  <li>part: 운동 자극 부위. 현재 아무런 기능 없음.</li>
+  <li>type: 횟수/시간 형식을 기록하는 자리. 현재 아무런 기능 없음.</li>
+  <li>minreps: 최소 횟수/시간. 현재 아무런 기능 없음.</li>
+  <li>difficulty: 운동의 난이도. 운동의 횟수/증가율을 결정. 높을수록 증가율은 낮아진다.</li>
+  <li>curReps: 현재 횟수/시간. 알림창에 표시되는 항목.</li>
+  <li>overHeat: 운동의 증가율을 결정. 0으로 둘 것.</li>
+</ul>
 
